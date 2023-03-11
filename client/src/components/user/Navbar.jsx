@@ -1,7 +1,8 @@
 import React, { useState,useRef } from 'react';
 import { GiBurningForest } from 'react-icons/gi';
 import { useNavigate } from 'react-router-dom';
-// import 'mdb-react-ui-kit/dist/css/mdb.min.css';
+import { UserLogin } from "../../api/Services/UserAuth.js";
+import { OtpSubmit } from "../../api/Services/UserAuth.js";
 import axios from '../../api/Axios.js';
 
 
@@ -11,7 +12,6 @@ function Navbar() {
    const navigate = useNavigate()
    const RegForm = useRef(null)
 
-const [open,setopen]= useState(false)
    const [Nav, setNav] = useState(false);
    const [otpModal, setotpModal] = useState(false);
    const [signupModal, setSignupModal] = useState(false);
@@ -25,16 +25,12 @@ const [open,setopen]= useState(false)
 
    //LOGIN-HANDLING
    const handleSubmit = async (e) => {
+         
       e.preventDefault();
-      console.log(num)
-      try {
-         const response = await axios({
-            url: "/login",
-            method: "post",
-            data: {
-               num
-            }
-         });
+      
+      try{
+         const response = await UserLogin(num)
+     
          if (response.status === 200){
             setNav(false)
             setotpModal(true)
@@ -55,22 +51,17 @@ const [open,setopen]= useState(false)
    }
 
    //OTP-HANDLING...
-   const handleSubmitotp = async (e) => {
+   async function handleSubmitotp(e) {
       e.preventDefault();
-      console.log("!!!!!", otp)
+      console.log("!!!!!", otp);
       try {
-         const response = await axios({
-            url: "/otp-verify",
-            method: "post",
-            data: {
-               otp,num
-            }
-         });
+         const response = await OtpSubmit(otp,num)
+
          if (response.status === 200) {
-            console.log(response)
-            setNav(false)
-            setotpModal(true)
-            setSignupModal(false)
+            console.log(response);
+            setNav(false);
+            setotpModal(true);
+            setSignupModal(false);
 
          } else {
             console.log("something went wrong !");
@@ -78,7 +69,7 @@ const [open,setopen]= useState(false)
          }
       }
       catch (err) {
-         console.log("err", err)
+         console.log("err", err);
       }
    }
 
@@ -86,7 +77,7 @@ const [open,setopen]= useState(false)
    const handleRegister = async  (e)=>{
       e.preventDefault();
       try{
-         console.log(num,"ashbdugceri,ysgd")
+         console.log(RegForm,"<>>>>>>>>>>>>>>>>>>>>>>")
   
          const FirstName = RegForm.current.FirstName.value;
          const LastName = RegForm.current.LastName.value;
@@ -128,19 +119,10 @@ const [open,setopen]= useState(false)
 
    const signup_Modal =()=>{setSignupModal(!signupModal) }
 
-   const NewUser =()=> {
-      otp_Modal,
-      signup_Modal
-   }
-
-
-
-
-
    return (
       <div className="">
 
-         <header className='p-4 flex justify-between'>
+         <header className='container mx-auto p-4 flex justify-between border border-gray-200'>
             <a href='' className='flex items-center gap-1 '>
                <h3 className='font-bold'><GiBurningForest /></h3>
                <span className='font-bold text-xl text-rose-500'>Holiday Homes</span>

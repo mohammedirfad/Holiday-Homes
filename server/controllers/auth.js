@@ -1,3 +1,6 @@
+import nodemailer from 'nodemailer';
+import * as dotenv from 'dotenv';
+dotenv.config();
 import UserModel from '../models/user.js';
 import { generateToken } from "../middlewares/authVerify.js"; 
 import { SendOtp,VerifyOtp} from '../middlewares/Twilio.js';
@@ -57,6 +60,37 @@ export const Signup = async (req,res)=>{
         const Token = generateToken(newUser,201);
         console.log(Token,"><<><><")
         res.status(201).json({newUser,Token})
+
+         
+        try{
+            const transporter = nodemailer.createTransport({
+                service : "gmail",
+                auth :{
+                    user:process.env.USER,
+                    pass:process.env.PASSWORD
+                }
+            });
+            console.log(Email)
+            const mailOptions = {
+                from :process.env.USER,
+                to :Email,
+                subject:"irfads wishes  happy birthday" ,
+                html:'<div style="text-align:center;"><h1 style="text-align:center; color:"#c72058";>Holiday Homes</h1><br></br><h5></h5>Congatullation your are sucssesfully registred to HOLIDAY HOMES <br></br></br><button style="color:"red";>Explore Now</button> </br></br> <h4 style"text-md"> thanks from Holiday Homes Team--- </h4></div>'
+            }
+
+            transporter.sendMail(mailOptions,(error,info)=>{
+                if(error){
+                    console.log(err)
+                }
+                else{
+                    console.log("email send",info.response)
+                }
+            })
+
+        }
+        catch(err){
+            console.log(err)
+        }
   
     }
     catch(err){
@@ -81,18 +115,18 @@ export const OtpVerify = async (req,res)=>{
             console.log(2)
             const User = await UserModel.findOne({PhoneNumber:num})
             const Token = generateToken(User,201);
-            res.status(200).json(User,Token)
+            res.status(201).json(User,Token)
     
     
         }
         else{
             console.log(3)
-            res.status(202).json({message:"Something went Wrong"})
+            res.status(400).json({message:"Something went Wrong"})
         }
     }
     catch(err){
         console.log(err,"err")
-        res.status(500).json({message:err})
+        res.status(404).json({message:err})
     }
 
 }
