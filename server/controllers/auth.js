@@ -22,7 +22,8 @@ export const userAuth = async (req,res)=>{
         if(user){
             console.log(1.1)
             SendOtp(req.body.num);
-            res.status(200).json({message:"Succesfully logged in"})
+            console.log(1.2)
+            res.status(200).json({message:"Succesfully Done!"})
         
         }
         else{   
@@ -115,9 +116,7 @@ export const OtpVerify = async (req,res)=>{
             console.log(2)
             const User = await UserModel.findOne({PhoneNumber:num})
             const Token = generateToken(User,201);
-            res.status(201).json(User,Token)
-    
-    
+            res.status(201).json({User,Token})
         }
         else{
             console.log(3)
@@ -126,7 +125,41 @@ export const OtpVerify = async (req,res)=>{
     }
     catch(err){
         console.log(err,"err")
-        res.status(404).json({message:err})
+        res.status(500).json({message:err})
+    }
+
+}
+
+
+export const googleAuth = async (req,res)=>{
+    const email = req.body.datas.data.email;
+    console.log(email,">>>>>>>>>>>>>")
+    console.log(req.body)
+    const User = await UserModel.findOne({Email:email})
+    console.log(User);
+    if(User !== null){
+        const Token = generateToken(User,201);
+        console.log(Token,1)
+        res.status(201).json({User,Token})
+    } else {
+        console.log("Here");
+        const { given_name,family_name,email } =req.body.datas.data;
+      
+        const newUser = new UserModel ({
+            FirstName: given_name,
+            LastName :family_name,
+           
+            Email :email,
+           
+        })
+        console.log(1.0)
+        await newUser.save();
+      
+        const Token = generateToken(newUser,201);
+        console.log(Token,"><<><><")
+        res.status(201).json({newUser,Token})
+
+
     }
 
 }

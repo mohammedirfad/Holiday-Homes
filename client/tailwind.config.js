@@ -6,6 +6,9 @@ module.exports = {
     extend: {
       colors:{
         primary:'#F5385D'
+      },
+      fontsize:{
+        "faheem":"100rem"
       }
     },
   },

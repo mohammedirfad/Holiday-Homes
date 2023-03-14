@@ -1,5 +1,7 @@
 import React, { useState,useRef } from 'react';
 import { GiBurningForest } from 'react-icons/gi';
+import { GoogleLoginButton } from "react-social-login-buttons";
+import { LoginSocialGoogle } from "reactjs-social-login";
 import { useNavigate } from 'react-router-dom';
 import { UserLogin } from "../../api/Services/UserAuth.js";
 import { OtpSubmit } from "../../api/Services/UserAuth.js";
@@ -20,9 +22,6 @@ function Navbar() {
    const [otp, setOtp] = useState("")
 
 
-
-
-
    //LOGIN-HANDLING
    const handleSubmit = async (e) => {
          
@@ -33,8 +32,9 @@ function Navbar() {
      
          if (response.status === 200){
             setNav(false)
-            setotpModal(true)
             setSignupModal(false)
+            setTimeout(() => {
+               setotpModal(true)             }, "5000");
 
          }
          if(response.status === 202) {
@@ -60,8 +60,8 @@ function Navbar() {
          if (response.status === 200) {
             console.log(response);
             setNav(false);
-            setotpModal(true);
             setSignupModal(false);
+            setotpModal(true);
 
          } else {
             console.log("something went wrong !");
@@ -111,6 +111,30 @@ function Navbar() {
       catch(err){
          throw err;
       }
+   }
+
+
+   //Google-Auth
+
+   const googleAuth = async (datas)=>{
+      console.log(datas,"<><><><><><><>>>>>>>>>>>>>>>><<")
+      try{
+         const response = await axios ({
+            url :"/google-Auth",
+            method:"post",
+            data:{
+               datas
+            }
+         })
+
+         console.log(response,"111212121324658941")
+
+
+      }
+      catch(err){
+         console.log(err)
+      }
+
    }
 
    const NavModal = () => { setNav(!Nav) }
@@ -164,11 +188,12 @@ function Navbar() {
 
          {console.log(Nav,11111)}
 
-      <div className="w-full flex justify-center border-gray-400">
+      <div className="w-full mt-5 flex justify-center border-gray-400">
          <div className="w-full relative flex flex-col mt-50 max-w-lg gap-4 p-0  rounded-md shadow-md  dark:bg-gray-900 dark:text-gray-100">
               
-              
-               <div className={ Nav ? "w-full":"hidden"}>
+              {
+               Nav && (
+                  <div className={ "w-full"}>
 
 
                   <button className="absolute top-2 left-5" onClick={NavModal}>
@@ -204,15 +229,37 @@ function Navbar() {
                      <span className='flex '>or</span>
                      <div className='flex w-2/5 border border-gray-300'></div>
 
-                     <button type="button" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Google</span></button>
+                     {/* <button type="button" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Google</span></button> */}
+                     <LoginSocialGoogle
+                           client_id={"366705276579-pfjib8v3kphbvrd96nm4qh6ua0k9b8pb.apps.googleusercontent.com"}
+                           scope="openid profile email"
+                           discoveryDocs="claims_supported"
+                           access_type="offline"
+                           // onResolve={({provider, data }) => {
+                           //    console.log(provider, data);
+                           // }}
+                           onResolve={googleAuth}
+
+                           onReject={(err) => {
+                              console.log(err);
+                           }}
+                           >
+                       <GoogleLoginButton />
+                     </LoginSocialGoogle>
                      <button type="button" className="w-full hover:scale-100 mb-4 mt-4 px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Facebook</span></button>
 
                   </div>
                   
                </div>
+               )
+              }
+              
+               
 
 
-               <div className={otpModal ? "w-full" : "hidden"}>
+               {/* <div className={otpModal ? "w-full" : "hidden"}> */}
+                {
+                  otpModal && ( <div className= {"w-full"}>
                      <button className="absolute top-2 left-5" >
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
                            <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
@@ -246,9 +293,11 @@ function Navbar() {
 
                         <div className='flex w-2/5 border border-gray-300 mt-4' ></div>
                      </div>
-             </div>
+          
 
 
+                  </div>)
+                }
 
              <div className={signupModal ? "w-full" : "hidden"}>
                      <button className="absolute top-2 left-5" onClick={signup_Modal}>

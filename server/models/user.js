@@ -5,7 +5,7 @@ const UserSchema = mongoose.Schema({
 
     FirstName : {
          type : String,
-         required: [true,"please Tell your Name !"],
+        //  required: [true,"please Tell your Name !"],
          minLen: [3, "FirstName must have atleast 2 Letters"],
          maxlen: [25, "FirstName must have atmost 25 Letters"],
          validate: [validator.isAlpha, 'Please enter a valid FirstName']
@@ -13,7 +13,7 @@ const UserSchema = mongoose.Schema({
     },
     LastName : {
          type : String,
-         required: [true,"please Tell your Name !"],
+        //  required: [true,"please Tell your Name !"],
          minLen: [3, "LastName must have atleast 2 Letters"],
          maxlen: [25, "LastName must have atmost 25 Letters"],
          validate: [validator.isAlpha, 'Please enter a valid FirstName']
@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema({
     },
     PhoneNumber : {
         type : Number,
-        required: true,
+        // required: true,
         unique: true,
 
     },
