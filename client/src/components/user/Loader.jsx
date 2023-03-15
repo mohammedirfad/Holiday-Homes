@@ -47,7 +47,7 @@ const itemMain = {
 
 const Loader = ({ setLoading }) => {
   return (
-    <motion.div className="loader">
+    <motion.div className="_loader">
       <motion.div
         variants={container}
         onAnimationComplete={() => setLoading(false)}

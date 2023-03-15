@@ -31,7 +31,7 @@ const Banner = () => {
     }, 2000);
   }, []);
   return (
-    <motion.div className='banner' variants={banner}>
+    <motion.div className='_banner' variants={banner}>
       <BannerRowTop title={"brand"} />
       <BannerRowCenter title={"experience"} playMarquee={playMarquee} />
       <BannerRowBottom title={"studio"} />

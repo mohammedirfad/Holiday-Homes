@@ -1,9 +1,9 @@
-body.loading {
+._landing .loading {
     overflow: hidden;
     height: 100vh;
   }
-  
-  .loader {
+ ._landing{
+  ._loader {
     .loader-inner {
       .image-block {
         position: absolute;
@@ -55,3 +55,4 @@ body.loading {
       }
     }
   }
+} 

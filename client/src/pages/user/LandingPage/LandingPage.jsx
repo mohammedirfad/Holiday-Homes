@@ -21,6 +21,7 @@ function LandingPage() {
   }, [loading]);
 
   return (
+    <div className="_landing">
     <AnimateSharedLayout type='crossfade'>
       <AnimatePresence>
         {loading ? (
@@ -44,6 +45,7 @@ function LandingPage() {
         )}
       </AnimatePresence>
     </AnimateSharedLayout>
+    </div>
   );
 }
 

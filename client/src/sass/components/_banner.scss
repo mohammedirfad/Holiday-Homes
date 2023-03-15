@@ -1,4 +1,8 @@
-.banner {
+._landing{
+
+
+._banner {
+
     z-index: 100;
     position: relative;
     .banner-row {
@@ -22,14 +26,14 @@
       }
       .row-title,
       .row-letter {
-        font-size: 28rem;
+        font-size: 16rem;
         font-weight: 500;
         position: relative;
         letter-spacing: -0.8rem;
         display: inline-block;
         white-space: nowrap;
         @media (max-width: $layout-breakpoint-xsmall) {
-          font-size: 13rem;
+          font-size: 9rem;
         }
       }
      
@@ -51,10 +55,10 @@
           justify-content: flex-start;
         }
         .row-message {
-          font-weight: 500;
-          font-size: 1.8rem;
-          line-height: 2.6rem;
-          width: 320px;
+          font-weight: 250;
+          font-size: 0.8rem;
+          line-height: 1.8rem;
+          width: 230px;
         }
       }
       .scroll {
@@ -86,6 +90,9 @@
       }
     }
   }
+} 
+
+
   
   .transition-image {
     position: absolute;

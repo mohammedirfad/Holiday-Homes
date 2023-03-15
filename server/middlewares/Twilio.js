@@ -13,15 +13,16 @@ export const SendOtp = (phone) => {
   console.log("vannu")
   console.log(Acc_sid);
     const client = twilio(Acc_sid, Auth_token);
+    console.log(phone);
     client.verify.v2
       .services(Service_id)
       .verifications.create({ to: `+91 ${phone}`, channel: "sms" })
       .then((verification) => console.log(verification.status,"1111111111111111111"))
-      .catch((error) => console.log(error.message));
+      .catch((error) => console.log(error.message,";;;;;;;;;"));
   };
   
   export const VerifyOtp = (phone, otp) => {
-    const client = twilio(Acc_sid, Auth_token);
+    const client = twilio(Acc_sid,Auth_token);
     return new Promise((resolve, reject) => {
       client.verify.v2
       .services(Service_id)

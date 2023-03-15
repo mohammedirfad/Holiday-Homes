@@ -12,7 +12,7 @@ const Header = () => {
         delay: 0.6,
       }}
 
-      className='header'>
+      className='_header'>
       <div className='header-inner'>
         <div className='logo'>Holiday Homes</div>
         <nav className='nav'>

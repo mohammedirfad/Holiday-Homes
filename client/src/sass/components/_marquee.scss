@@ -1,6 +1,7 @@
 $move-initial: calc(-25%);
 $move-final: calc(-50%);
 
+._landing{
 .marquee {
   position: relative;
   overflow: hidden;
@@ -46,4 +47,6 @@ $move-final: calc(-50%);
   100% {
     transform: translate3d(calc(-50% + 10vw), 0, 0);
   }
+}
+
 }

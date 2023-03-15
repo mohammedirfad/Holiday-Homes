@@ -5,6 +5,8 @@ import { LoginSocialGoogle } from "reactjs-social-login";
 import { useNavigate } from 'react-router-dom';
 import { UserLogin } from "../../api/Services/UserAuth.js";
 import { OtpSubmit } from "../../api/Services/UserAuth.js";
+import { useDispatch } from "react-redux";
+import { setLogin } from '../../Store/features/authSlice'
 import axios from '../../api/Axios.js';
 
 
@@ -13,6 +15,7 @@ import axios from '../../api/Axios.js';
 function Navbar() {
    const navigate = useNavigate()
    const RegForm = useRef(null)
+   const dispatch = useDispatch();
 
    const [Nav, setNav] = useState(false);
    const [otpModal, setotpModal] = useState(false);
@@ -102,6 +105,20 @@ function Navbar() {
             setotpModal(false)
             setSignupModal(false)
 
+            
+            console.log(res.data.newUser.FirstName)
+            const isAuth = res.data;
+            console.log(isAuth)
+            if(isAuth){
+               dispatch(
+                  setLogin({
+                     user : "user",
+                     name : isAuth.newUser.FirstName,
+                     token: isAuth.Token
+                  })
+               )
+            };
+
          }
          else{
             return;
@@ -117,7 +134,7 @@ function Navbar() {
    //Google-Auth
 
    const googleAuth = async (datas)=>{
-      console.log(datas,"<><><><><><><>>>>>>>>>>>>>>>><<")
+      console.log(datas)
       try{
          const response = await axios ({
             url :"/google-Auth",
@@ -377,16 +394,6 @@ function Navbar() {
             </div>
          </div>
          {/* )} */}
-
-
-
-
-     
-
-
-
-
-
 
       </div>
    );
