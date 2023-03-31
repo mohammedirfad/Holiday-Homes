@@ -1,5 +1,9 @@
-import React, { useState,useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { GiBurningForest } from 'react-icons/gi';
+import { CgProfile } from 'react-icons/cg';
+import { BiSearch } from 'react-icons/bi';
+import { AiOutlineHeart } from 'react-icons/ai';
+
 import { GoogleLoginButton } from "react-social-login-buttons";
 import { LoginSocialGoogle } from "reactjs-social-login";
 import { useNavigate } from 'react-router-dom';
@@ -7,8 +11,8 @@ import { UserLogin } from "../../api/Services/UserAuth.js";
 import { OtpSubmit } from "../../api/Services/UserAuth.js";
 import { useDispatch } from "react-redux";
 import { setLogin } from '../../Store/features/authSlice'
-import axios from '../../api/Axios.js';
 
+import axios from '../../api/Axios.js';
 
 
 
@@ -16,6 +20,7 @@ function Navbar() {
    const navigate = useNavigate()
    const RegForm = useRef(null)
    const dispatch = useDispatch();
+
 
    const [Nav, setNav] = useState(false);
    const [otpModal, setotpModal] = useState(false);
@@ -27,26 +32,30 @@ function Navbar() {
 
    //LOGIN-HANDLING
    const handleSubmit = async (e) => {
-         
+
       e.preventDefault();
-      
-      try{
+
+      try {
+
          const response = await UserLogin(num)
-     
-         if (response.status === 200){
+
+
+         if (response.status === 200) {
+            setNav("")
             setNav(false)
             setSignupModal(false)
             setTimeout(() => {
-               setotpModal(true)             }, "5000");
+               setotpModal(true)
+            }, "5000");
 
          }
-         if(response.status === 202) {
+         if (response.status === 202) {
 
             setNav(false)
             setotpModal(false)
             setSignupModal(true)
          }
-       
+
       }
       catch (err) {
          console.log("err", err)
@@ -58,9 +67,10 @@ function Navbar() {
       e.preventDefault();
       console.log("!!!!!", otp);
       try {
-         const response = await OtpSubmit(otp,num)
+         const response = await OtpSubmit(otp, num)
 
          if (response.status === 200) {
+            navigate('/home')
             console.log(response);
             setNav(false);
             setSignupModal(false);
@@ -77,21 +87,21 @@ function Navbar() {
    }
 
    //SIGNUP-HANDLING..
-   const handleRegister = async  (e)=>{
+   const handleRegister = async (e) => {
       e.preventDefault();
-      try{
-         console.log(RegForm,"<>>>>>>>>>>>>>>>>>>>>>>")
-  
+      try {
+         console.log(RegForm, "<>>>>>>>>>>>>>>>>>>>>>>")
+
          const FirstName = RegForm.current.FirstName.value;
          const LastName = RegForm.current.LastName.value;
-         const DateofBirth   = RegForm.current.DateofBirth.value;
+         const DateofBirth = RegForm.current.DateofBirth.value;
          const Email = RegForm.current.Email.value;
          const PhoneNumber = num;
-       
+
          const res = await axios({
-            url : "/signup",
-            method: "post" ,
-            data :{
+            url: "/signup",
+            method: "post",
+            data: {
                FirstName,
                LastName,
                DateofBirth,
@@ -100,32 +110,32 @@ function Navbar() {
             }
 
          });
-         if(res.status===201){
+         if (res.status === 201) {
             setNav(false)
             setotpModal(false)
             setSignupModal(false)
 
-            
+
             console.log(res.data.newUser.FirstName)
             const isAuth = res.data;
             console.log(isAuth)
-            if(isAuth){
+            if (isAuth) {
                dispatch(
                   setLogin({
-                     user : "user",
-                     name : isAuth.newUser.FirstName,
+                     user: "user",
+                     name: isAuth.newUser.FirstName,
                      token: isAuth.Token
                   })
                )
             };
 
          }
-         else{
+         else {
             return;
          }
-        
+
       }
-      catch(err){
+      catch (err) {
          throw err;
       }
    }
@@ -133,22 +143,47 @@ function Navbar() {
 
    //Google-Auth
 
-   const googleAuth = async (datas)=>{
+   const googleAuth = async (datas) => {
       console.log(datas)
-      try{
-         const response = await axios ({
-            url :"/google-Auth",
-            method:"post",
-            data:{
+      try {
+         const response = await axios({
+            url: "/google-Auth",
+            method: "post",
+            data: {
                datas
             }
-         })
+         });
+         if (response.status === 201) {
+            setNav(false)
+            setotpModal(false)
+            setSignupModal(false)
 
-         console.log(response,"111212121324658941")
+            navigate('/Home')
+
+
+            console.log(response.data.newUser.FirstName)
+            const isAuth = response.data;
+            console.log(isAuth)
+            if (isAuth) {
+               dispatch(
+                  setLogin({
+                     user: "user",
+                     name: isAuth.newUser.FirstName,
+                     token: isAuth.Token
+                  })
+               )
+            };
+         }
+         else {
+            return;
+         }
+
+
+
 
 
       }
-      catch(err){
+      catch (err) {
          console.log(err)
       }
 
@@ -158,18 +193,18 @@ function Navbar() {
 
    const otp_Modal = () => { setotpModal(!otpModal) }
 
-   const signup_Modal =()=>{setSignupModal(!signupModal) }
+   const signup_Modal = () => { setSignupModal(!signupModal) }
 
    return (
-      <div className="">
+      <div className="w-full">
 
-         <header className='container mx-auto p-4 flex justify-between border border-gray-200'>
+         <header className='p-4 flex justify-between border border-gray-200'>
             <a href='' className='flex items-center gap-1 '>
-               <h3 className='font-bold'><GiBurningForest /></h3>
-               <span className='font-bold text-xl text-rose-500'>Holiday Homes</span>
+               <h3 className='font-bold '><GiBurningForest className="text-3xl h-8" /></h3>
+               <span className='font-bold text-xl text-rose-500 hidden sm:block'>Holiday Homes</span>
             </a>
 
-            <div className='flex gap-2 border border-300 rounded-full py-2 px-4 shadow-md shadow-270'>
+            <div className='flex gap-2 border border-300 rounded-full py-2 px-4 shadow-md shadow-270 mx-auto sm:px-4 justify-center items-center'>
                <div className='font-medium'>Any where</div>
                <div className='font-bold border-l border-gray-300'></div>
                <div className='font-medium'>Any weeks</div>
@@ -184,101 +219,109 @@ function Navbar() {
 
             </div>
 
-            <div className='flex items-center gap-2 border border-300 rounded-full py-2 px-3 shadow-md ' onClick={NavModal}>
+            <div className='flex gap-6 '>
 
-               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 ">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-               </svg>
-               <div className='bg-gray-500 text-white rounded-full border border-gray overflow-hidden'>
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 relative top-.5">
-                     <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
-                  </svg>
-
+               <div className='items-center gap-2 border sm:border-300 rounded-full py-2 px-3 sm:shadow-md hidden md:block' onClick={()=>navigate('/host')}>
+                  <p className="md:after:content-['_Your_Home'] font-bold "><a href='/host'>Host</a></p>
                </div>
 
+               <div className=' items-center gap-2 border sm:border-300 rounded-full py-2 px-3 sm:shadow-md overflow-hidden hidden sm:flex
+            ' onClick={NavModal}>
 
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 hidden md:block">
+                     <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                  </svg>
+                  <div className='bg-gray-500 text-white rounded-full border border-gray overflow-hidden '>
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 relative top-.5 ">
+                        <path fillRule="evenodd" d="M7.5 6a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM3.751 20.105a8.25 8.25 0 0116.498 0 .75.75 0 01-.437.695A18.683 18.683 0 0112 22.5c-2.786 0-5.433-.608-7.812-1.7a.75.75 0 01-.437-.695z" clipRule="evenodd" />
+                     </svg>
+
+                  </div>
+
+
+               </div>
             </div>
 
          </header>
 
-    
-
-         {console.log(Nav,11111)}
-
-      <div className="w-full mt-5 flex justify-center border-gray-400">
-         <div className="w-full relative flex flex-col mt-50 max-w-lg gap-4 p-0  rounded-md shadow-md  dark:bg-gray-900 dark:text-gray-100">
-              
-              {
-               Nav && (
-                  <div className={ "w-full"}>
 
 
-                  <button className="absolute top-2 left-5" onClick={NavModal}>
-                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
-                        <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
-                     </svg>
-                  </button>
+         {console.log(Nav, 11111)}
 
-                  <div className='flex justify-center w- full'>  <h4 className=" gap-2 font-semibold   ">Log in or Sign up</h4></div>
-                  <div className='w-full border border-gray-250 mt-5'></div>
+         <div className="w-full mt-5 flex justify-center border-gray-400">
+            <div className="w-full relative flex flex-col mt-50 max-w-lg gap-4 p-0  rounded-md shadow-md  dark:bg-gray-900 dark:text-gray-100">
+
+               {
+                  Nav && (
+                     <div className={"w-full"}>
 
 
-                  <div className='px-6'>
-                     <h1 className='mt-4 font-semibold text-xl'>Welcome to Holiday Homes</h1>
+                        <button className="absolute top-2 left-5" onClick={NavModal}>
+                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
+                              <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
+                           </svg>
+                        </button>
 
-                     <form onSubmit={handleSubmit} >
+                        <div className='flex justify-center w- full'>  <h4 className=" gap-2 font-semibold   ">Log in or Sign up</h4></div>
+                        <div className='w-full border border-gray-250 mt-5'></div>
 
-                        <div className='flex border border-black-550 rounded-md mt-4 h-12'>
-                           <input className='pl-1 justify-center color-gray w-full'
-                              type='number'
-                              placeholder='Phone Number..'
-                              name='PhoneNumber'
-                              value={num}
-                              onChange={(e) => setNum(e.target.value)}
-                           ></input>
-                        </div>
-                        <span className='mt-2 flex text-xs text-black-400 font-normal'>We’ll call or text you to confirm your number.@ stanterd rates . <p className='text-xs font-bold underline'> Privacy Policy</p></span>
 
-                        <button type="submit" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md bg-primary " onClick={otp_Modal}><span className='text-white'>Continue</span></button>
-                     </form>
+                        <div className='px-6'>
+                           <h1 className='mt-4 font-semibold text-xl'>Welcome to Holiday Homes</h1>
 
-                     <div className='flex w-2/5 border border-gray-300 mt-4' ></div>
-                     <span className='flex '>or</span>
-                     <div className='flex w-2/5 border border-gray-300'></div>
+                           <form onSubmit={handleSubmit} >
 
-                     {/* <button type="button" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Google</span></button> */}
-                     <LoginSocialGoogle
-                           client_id={"366705276579-pfjib8v3kphbvrd96nm4qh6ua0k9b8pb.apps.googleusercontent.com"}
-                           scope="openid profile email"
-                           discoveryDocs="claims_supported"
-                           access_type="offline"
-                           // onResolve={({provider, data }) => {
-                           //    console.log(provider, data);
-                           // }}
-                           onResolve={googleAuth}
+                              <div className='flex border border-black-550 rounded-md mt-4 h-12'>
+                                 <input className='pl-1 justify-center color-gray w-full'
+                                    type='number'
+                                    placeholder='Phone Number..'
+                                    name='PhoneNumber'
+                                    value={num}
+                                    onChange={(e) => setNum(e.target.value)}
+                                 ></input>
+                              </div>
+                              <span className='mt-2 flex text-xs text-black-400 font-normal'>We’ll call or text you to confirm your number.@ stanterd rates . <p className='text-xs font-bold underline'> Privacy Policy</p></span>
 
-                           onReject={(err) => {
-                              console.log(err);
-                           }}
+                              <button type="submit" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md bg-primary " onClick={otp_Modal}><span className='text-white'>Continue</span></button>
+                           </form>
+
+                           <div className='flex w-2/5  mt-4' ></div>
+                           <span className='flex items-center justify-center '>or</span>
+                           {/* <div className='flex w-2/5 border border-gray-300'></div> */}
+
+                           {/* <button type="button" className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Google</span></button> */}
+                           <LoginSocialGoogle
+                              client_id={"366705276579-pfjib8v3kphbvrd96nm4qh6ua0k9b8pb.apps.googleusercontent.com"}
+                              scope="openid profile email"
+                              discoveryDocs="claims_supported"
+                              access_type="offline"
+                              // onResolve={({provider, data }) => {
+                              //    console.log(provider, data);
+                              // }}
+                              onResolve={googleAuth}
+
+                              onReject={(err) => {
+                                 console.log(err);
+                              }}
                            >
-                       <GoogleLoginButton />
-                     </LoginSocialGoogle>
-                     <button type="button" className="w-full hover:scale-100 mb-4 mt-4 px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Facebook</span></button>
+                              <GoogleLoginButton />
+                           </LoginSocialGoogle>
+                           <button type="button" className="w-full hover:scale-100 mb-4 mt-4 px-5 py-3 font-semibold rounded-md border border-black "><span className='text-black'>Continue with Facebook</span></button>
 
-                  </div>
-                  
-               </div>
-               )
-              }
-              
-               
+                        </div>
+
+                     </div>
+                  )
+               }
+
+
 
 
                {/* <div className={otpModal ? "w-full" : "hidden"}> */}
-                {
-                  otpModal && ( <div className= {"w-full"}>
+               {
+                  otpModal && (<div className={"w-full"}>
                      <button className="absolute top-2 left-5" >
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4" onClick={otp_Modal}>
                            <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
                         </svg>
                      </button>
@@ -310,90 +353,114 @@ function Navbar() {
 
                         <div className='flex w-2/5 border border-gray-300 mt-4' ></div>
                      </div>
-          
+
 
 
                   </div>)
-                }
+               }
 
-             <div className={signupModal ? "w-full" : "hidden"}>
-                     <button className="absolute top-2 left-5" onClick={signup_Modal}>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
-                           <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
-                        </svg>
-                     </button>
+               <div className={signupModal ? "w-full" : "hidden"}>
+                  <button className="absolute top-2 left-5" onClick={signup_Modal}>
+                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor" className="flex-shrink-0 w-4 h-4">
+                        <polygon points="427.314 107.313 404.686 84.687 256 233.373 107.314 84.687 84.686 107.313 233.373 256 84.686 404.687 107.314 427.313 256 278.627 404.686 427.313 427.314 404.687 278.627 256 427.314 107.313"></polygon>
+                     </svg>
+                  </button>
 
-                     <div className='flex justify-center w- full'>  <h4 className=" gap-2 font-semibold   ">Finish signing up </h4></div>
-                     <div className='w-full border border-gray-250 mt-5'></div>
-
-
-                     <div className='px-6'>
-                       
-
-                        <form ref={RegForm} >
-
-                           <div className='flex border border-gray rounded-md mt-4 h-14'>
-                              <input className='pl-1 justify-center color-gray w-full'
-                                 type='text'
-                                 placeholder='First Name '
-                                 name='FirstName'
-                                 // value={}
-                                 onChange={(e) => setOtp()}
-                              ></input>
-                              
-                           
-                           </div>
-                           <div className='flex border border-black-550 rounded-md  h-14'>
-                              
-                           
-                              <input className='pl-1 justify-center color-gray w-full'
-                                 type='text'
-                                 placeholder='Last Name'
-                                 name='LastName'
-                                 // value={otp}
-                            
-                              ></input> 
-                           </div>
-                           <span className='mt-2 flex text-xs text-black-400 font-normal'>Make sure it matches the name on your.<p className='text-xs text-black-500 font-bold underline'> government ID</p></span>
-
-                           <div className='flex border border-black-550 rounded-md mt-5 h-14'>
-                              <input className='pl-1 justify-center color-gray w-full'
-                                 type='date'
-                                 placeholder='Date of Birth'
-                                 name='DateofBirth'
-                                 // value={otp}
-                               
-                              ></input>
-                           </div>
-
-                           <span className='mt-2 flex text-xs text-black-400 font-normal'>To sign up, you need to be at least 18. Your birthday won’t be shared with other people who use Holiday Homes.</span>
-                           
-                           <div className='flex border border-black-550 rounded-md mt-5 h-14'>
-                              <input className='pl-1 justify-center color-gray w-full'
-                                 type='email'
-                                 placeholder='email'
-                                 name='Email'
-                                 // value={otp}
-                                 onChange={(e) => setOtp()}
-                              ></input>
-                           </div>
-
-                           <span className='mt-2 flex text-xs text-black-400 font-normal'> We'll email you trip confirmations and receipts.</span>
-                          
-                           <div className='w-full border border-gray-250 mt-5'></div>
-                           <button type="submit"  onClick={handleRegister} className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md bg-primary "><span className='text-white'>Agree and Continue</span></button>
+                  <div className='flex justify-center w- full'>  <h4 className=" gap-2 font-semibold   ">Finish signing up </h4></div>
+                  <div className='w-full border border-gray-250 mt-5'></div>
 
 
-                        </form>
+                  <div className='px-6'>
 
-                        <div className='flex w-2/5 border border-gray-300 mt-4' ></div>
-                     </div>
+
+                     <form ref={RegForm} >
+
+                        <div className='flex border border-gray rounded-md mt-4 h-14'>
+                           <input className='pl-1 justify-center color-gray w-full'
+                              type='text'
+                              placeholder='First Name '
+                              name='FirstName'
+                              // value={}
+                              onChange={(e) => setOtp()}
+                           ></input>
+
+
+                        </div>
+                        <div className='flex border border-black-550 rounded-md  h-14'>
+
+
+                           <input className='pl-1 justify-center color-gray w-full'
+                              type='text'
+                              placeholder='Last Name'
+                              name='LastName'
+                           // value={otp}
+
+                           ></input>
+                        </div>
+                        <span className='mt-2 flex text-xs text-black-400 font-normal'>Make sure it matches the name on your.<p className='text-xs text-black-500 font-bold underline'> government ID</p></span>
+
+                        <div className='flex border border-black-550 rounded-md mt-5 h-14'>
+                           <input className='pl-1 justify-center color-gray w-full'
+                              type='date'
+                              placeholder='Date of Birth'
+                              name='DateofBirth'
+                           // value={otp}
+
+                           ></input>
+                        </div>
+
+                        <span className='mt-2 flex text-xs text-black-400 font-normal'>To sign up, you need to be at least 18. Your birthday won’t be shared with other people who use Holiday Homes.</span>
+
+                        <div className='flex border border-black-550 rounded-md mt-5 h-14'>
+                           <input className='pl-1 justify-center color-gray w-full'
+                              type='email'
+                              placeholder='email'
+                              name='Email'
+                              // value={otp}
+                              onChange={(e) => setOtp()}
+                           ></input>
+                        </div>
+
+                        <span className='mt-2 flex text-xs text-black-400 font-normal'> We'll email you trip confirmations and receipts.</span>
+
+                        <div className='w-full border border-gray-250 mt-5'></div>
+                        <button type="submit" onClick={handleRegister} className="w-full hover:scale-100 mt-4  px-5 py-3 font-semibold rounded-md bg-primary "><span className='text-white'>Agree and Continue</span></button>
+
+
+                     </form>
+
+                     <div className='flex w-2/5 border border-gray-300 mt-4' ></div>
                   </div>
+               </div>
 
 
             </div>
          </div>
          {/* )} */}
+
+         <div className="bg-gray border border-gray absolute bottom-0  flex gap-6 sm:hidden w-full py-3 justify-center  ">
+            <div className='bg-white-500 text-gray rounded-full  justify-center '>
+               {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6 my-1 ">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+               </svg> */}
+
+               <CgProfile className="w-6 h-6 text-primary mt-1"/>
+
+
+            </div>
+            <button className='px-1 p-1 rounded-full font-bold'>
+               {/* <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6  text-primary font-bold ">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+               </svg> */}
+               <BiSearch className='w-6 h-6 text-primary '/>
+
+            </button>
+            <button className='px-1 p-1 rounded-full font-bold'>
+              
+               <AiOutlineHeart className='w-6 h-6 text-primary '/>
+
+            </button>
+         </div>
 
       </div>
    );

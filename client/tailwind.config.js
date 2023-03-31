@@ -9,15 +9,30 @@ module.exports = {
         'regal-blue' : "#ffe1bc",
         'regal-blue1': "#ffcfd1",
         'regal-blue2': "#f3c6f1",
-        'black-rgba': 'rgba(225, 225, 225, 0.54)'
+        'black-rgba': 'rgba(225, 225, 225, 0.54)',
+        "seco":"E31C5F",
+        "button":"#e41d57"
+
+      },
+      height:{
+        "3rem":"3rem",
+        "27rem":"27rem",
+        "28rem":"500px"
+      },
+      width:{
+        "682":"642px"
       },
 
       fontsize:{
-        "faheem":"100rem"
+        "3xl":"1.953rem"
       },
       fontfamily:{
         'sans' :['Inter','sans-serif']
 
+      },
+      backgroundImage:{
+        "login" :"url('/public/images/Login-bg.jpeg')",
+        "host"  :"url('/public/images/host.jpg')"
       }
     },
   },

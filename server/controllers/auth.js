@@ -75,7 +75,7 @@ export const Signup = async (req,res)=>{
             const mailOptions = {
                 from :process.env.USER,
                 to :Email,
-                subject:"irfads wishes  happy birthday" ,
+                subject:"Greetings From Holiday Homes " ,
                 html:'<div style="text-align:center;"><h1 style="text-align:center; color:"#c72058";>Holiday Homes</h1><br></br><h5></h5>Congatullation your are sucssesfully registred to HOLIDAY HOMES <br></br></br><button style="color:"red";>Explore Now</button> </br></br> <h4 style"text-md"> thanks from Holiday Homes Team--- </h4></div>'
             }
 
@@ -132,34 +132,40 @@ export const OtpVerify = async (req,res)=>{
 
 
 export const googleAuth = async (req,res)=>{
-    const email = req.body.datas.data.email;
-    console.log(email,">>>>>>>>>>>>>")
-    console.log(req.body)
-    const User = await UserModel.findOne({Email:email})
-    console.log(User);
-    if(User !== null){
-        const Token = generateToken(User,201);
-        console.log(Token,1)
-        res.status(201).json({User,Token})
-    } else {
-        console.log("Here");
-        const { given_name,family_name,email } =req.body.datas.data;
-      
-        const newUser = new UserModel ({
-            FirstName: given_name,
-            LastName :family_name,
-           
-            Email :email,
-           
-        })
-        console.log(1.0)
-        await newUser.save();
-      
-        const Token = generateToken(newUser,201);
-        console.log(Token,"><<><><")
-        res.status(201).json({newUser,Token})
 
-
+    try{
+        const email = req.body.datas.data.email;
+        console.log(email,">>>>>>>>>>>>>")
+        console.log(req.body)
+        const User = await UserModel.findOne({Email:email})
+        console.log(User);
+        if(User !== null){
+            const Token = generateToken(User,201);
+            console.log(Token,1)
+            res.status(201).json({User,Token})
+        } else {
+            console.log("Here");
+            const { given_name,family_name,email } =req.body.datas.data;
+          
+            const newUser = new UserModel ({
+                FirstName: given_name,
+                LastName :family_name,
+               
+                Email :email,
+               
+            })
+            console.log(1.0)
+            await newUser.save();
+          
+            const Token = generateToken(newUser,201);
+            console.log(Token,"><<><><")
+            res.status(201).json({newUser,Token})
+    
+    
+        }
+    }
+    catch(err){
+        res.status(400).json({message:err})
     }
 
 }

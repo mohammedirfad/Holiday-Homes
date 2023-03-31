@@ -20,6 +20,7 @@ app.use(cors())
 
 app.use("/", AuthRoute);
 
+
 DBconnect();
 mongoose.connection.on("disconnected", () =>{
     console.log("mongo disconnected!")
