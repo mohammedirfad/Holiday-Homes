@@ -12,6 +12,8 @@ function ProgressComponent({link,step}) {
   const [currentStep, setCurrentStep] = useState(0);
   const [progress, setProgress] = useState(0);
 
+  
+
   function handleNext() {
 
     setCurrentStep(currentStep + 1);
@@ -24,6 +26,7 @@ function ProgressComponent({link,step}) {
     setProgress(progress - (100 / numSteps));
   }
   const numSteps = 10; 
+
   return (
    
     
@@ -41,9 +44,9 @@ function ProgressComponent({link,step}) {
 
      <div className='absolute right-0 bg-black flex mx-10 justtify-center mt-5 w-24 h-10 rounded-md'>
      {currentStep < numSteps && (
-        <a href={link}>
+     
         <button className='text-white font-lg justify-center item-center mx-8 h-10 mt-0' onClick={handleNext}>Next</button>
-        </a>
+    
         )}
      </div>
 
